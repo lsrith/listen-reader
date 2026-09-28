@@ -1,0 +1,4 @@
+# Never publish books: the site is public, the novels are not.
+*.epub
+*.json
+.DS_Store

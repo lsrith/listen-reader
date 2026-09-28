@@ -1,0 +1,157 @@
+:root {
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --text: #1d1d1f;
+  --muted: #6e6e73;
+  --line: #e3e1dc;
+  --accent: #0a66c2;
+  --accent-text: #ffffff;
+  --danger: #c0392b;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141414;
+    --surface: #1e1e1e;
+    --text: #e8e6e3;
+    --muted: #9a9a9f;
+    --line: #333333;
+    --accent: #5aa7ff;
+    --accent-text: #0b1a2b;
+    --danger: #ff6b5b;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+a { color: var(--accent); }
+
+.wrap {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 16px 16px calc(96px + env(safe-area-inset-bottom));
+}
+
+h1 { font-size: 1.6rem; line-height: 1.2; margin: 8px 0 4px; }
+.sub { color: var(--muted); margin: 0 0 20px; }
+
+button, .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn.primary, button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+button.danger { color: var(--danger); }
+
+select {
+  min-height: 44px;
+  font: inherit;
+  padding: 0 8px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0 0 12px;
+}
+
+.card h2 { font-size: 1.1rem; margin: 0 0 4px; }
+.card .meta { color: var(--muted); font-size: 0.9rem; margin: 0 0 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.status { color: var(--muted); min-height: 1.5em; }
+.error { color: var(--danger); }
+
+.tips { color: var(--muted); font-size: 0.95rem; }
+.tips li { margin: 4px 0; }
+
+/* Chapter list */
+.toc { list-style: none; padding: 0; margin: 0; }
+.toc li a {
+  display: block;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+}
+.toc li.section {
+  padding: 20px 4px 6px;
+  font-weight: 700;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+.toc li.current a { color: var(--accent); font-weight: 600; }
+
+/* Reading page. Navigation sits outside <article> so Listen to Page skips it. */
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.95rem;
+}
+.bar .spacer { flex: 1; }
+.note { color: var(--muted); font-size: 0.9rem; margin: 12px 0 0; }
+
+article {
+  font: 1.15rem/1.65 Georgia, 'Times New Roman', serif;
+}
+article h2 { font: 700 1.35rem/1.3 -apple-system, sans-serif; margin: 2.2em 0 0.8em; }
+article h2:first-child { margin-top: 1em; }
+article h2.divider { text-align: center; font-size: 1.6rem; margin: 2.5em 0; }
+article h3 { font-size: 1.1rem; }
+article p { margin: 0 0 1em; }
+article p.tapped { background: color-mix(in srgb, var(--accent) 18%, transparent); border-radius: 4px; }
+article hr { border: 0; border-top: 1px solid var(--line); margin: 2em 25%; }
+
+.end { margin: 40px 0 0; display: grid; gap: 10px; }
+.end .btn { min-height: 56px; font-size: 1.05rem; }
+
+.from-here {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: none;
+  gap: 8px;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.2);
+  max-width: calc(100vw - 32px);
+}
+.from-here.show { display: flex; }
+.from-here button { white-space: nowrap; }

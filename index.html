@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Listen Reader</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <h1>Listen Reader</h1>
+    <p class="sub">EPUBs as clean pages for Safari’s Listen to Page. Books stay on this device.</p>
+
+    <div class="card">
+      <div class="row">
+        <label class="btn primary" for="file">Add EPUB…</label>
+        <input id="file" type="file" multiple hidden>
+        <label>Chapters per page
+          <select id="perPage">
+            <option>1</option><option>2</option><option>3</option><option>5</option>
+            <option>8</option><option>10</option><option>15</option><option>20</option>
+          </select>
+        </label>
+      </div>
+      <p id="status" class="status" aria-live="polite"></p>
+    </div>
+
+    <div id="books"></div>
+
+    <ul class="tips">
+      <li>Open a page, then tap <b>Aa → Listen to Page</b>. It keeps going with the screen locked.</li>
+      <li>Listen to Page stops at the end of a page. Tap <b>Next</b>, then start it again.</li>
+      <li>To skip ahead or back, tap any paragraph and choose <b>Start page here</b>.</li>
+    </ul>
+  </main>
+  <script src="vendor/jszip.min.js"></script>
+  <script type="module" src="library.js"></script>
+</body>
+</html>
