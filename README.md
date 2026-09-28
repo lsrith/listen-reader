@@ -34,33 +34,6 @@ your place.
 Open pages in a normal Safari tab. A Home Screen web app has no Aa menu, so
 Listen to Page isn't available there.
 
-## Deploying
-
-GitHub Pages serves the `main` branch root of
-[lsrith/listen-reader](https://github.com/lsrith/listen-reader). A push to
-`main` deploys in about a minute:
-
-```sh
-git push
-```
-
-This clone sets `core.sshCommand` to use `~/.ssh/id_ed25519_github`, because
-the default SSH key isn't registered with GitHub.
-
-Phones pick up the new version on their second visit after a deploy: the
-service worker serves the cached copy first and refreshes it in the background.
-
-`.gitignore` excludes `*.epub` and `*.json` so novels are never committed. It
-also excludes `.devcontainer/devcontainer.json`, which holds local paths.
-
-## Local testing
-
-```sh
-python3 -m http.server 8765
-```
-
-Then open <http://localhost:8765/>. Listen to Page itself only exists in Safari.
-
 ## Files
 
 | File | Role |
