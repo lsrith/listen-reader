@@ -4,12 +4,13 @@ A static web page for listening to EPUB novels on iPhone, two ways:
 
 - **Safari's Listen to Page** reads the chapter pages in the system voice and
   keeps going with the screen locked.
-- **The built-in player** (Web Speech API) follows the text, skips by paragraph
-  and runs on into the next chapters without stopping.
+- **Read aloud** (Web Speech API, built in) uses the same system voice, follows
+  the text, skips by paragraph and runs on into the next chapters without
+  stopping. It needs the screen on.
 
 **Live:** <https://lsrith.github.io/listen-reader/>. Tested on iPhone: Listen to
-Page appears in the Aa menu and keeps reading with the screen locked. The
-built-in player hasn't been tested on iPhone yet.
+Page keeps reading with the screen locked, and Read aloud's default voice is the
+same voice Listen to Page uses.
 
 - The site has no book content. EPUBs are picked from Files/iCloud Drive and stored
   in Safari's IndexedDB on the phone.
@@ -24,20 +25,22 @@ built-in player hasn't been tested on iPhone yet.
    pick one or more `.epub` files.
 3. **Continue** opens a page of N chapters (**Chapters per page**, default 5).
 
-### Built-in player
+The reading page keeps the screen on (wake lock) while it's open. Its bottom bar
+has five icons: library, chapter list, previous page, next page, and read aloud
+(headphones).
 
-- **▶** starts at the paragraph at the top of the screen. **⏮ ⏭** skip by
-  paragraph. The current paragraph is highlighted and kept in view.
+### Read aloud
+
+- The headphones icon starts reading at the paragraph at the top of the screen.
+  The bar switches to voice controls: previous paragraph, play/pause, next
+  paragraph, and ✕ to stop and return to the page icons.
+- The current paragraph is highlighted and kept in view.
 - It loads further chapters as it goes, so it doesn't stop at the page end.
 - The saved place is the paragraph being read, so **Continue** resumes there.
-- **Voice & options:** choose a voice (Premium and Enhanced voices are listed
-  first; download them in Settings → Accessibility → Spoken Content → Voices).
-  Siri voices aren't available to web pages.
-- iOS stops web speech when the screen locks. There are two workarounds:
-  - **Lock-screen mode (experimental)** plays a silent looping track, so the page
-    counts as playing media. That also puts play/pause and next/previous
-    paragraph on the lock screen.
-  - **Keep screen awake** stops the phone locking while the player runs.
+- Voice and speed are the system defaults (Settings → Accessibility → Spoken
+  Content). There are no in-page settings.
+- iOS stops web speech when the screen locks. Web speech produces no audio
+  track, so a page can't keep it going in the background. Hence the wake lock.
 
 ### Listen to Page
 
@@ -61,8 +64,8 @@ Listen to Page isn't available there.
 |---|---|
 | `index.html`, `library.js` | Library, import, settings |
 | `chapters.html`, `chapters.js` | Chapter list |
-| `read.html`, `read.js` | Reading page (one run of chapters as a single `<article>`; more are appended as the player reaches the end) |
-| `speech.js` | Built-in player: Web Speech, paragraph highlight, lock-screen mode, wake lock, Media Session |
+| `read.html`, `read.js` | Reading page: one run of chapters as a single `<article>` (more are appended while reading aloud), icon bar, wake lock |
+| `speech.js` | Read aloud: Web Speech with system defaults, paragraph highlight and skip |
 | `import.js` | EPUB → cleaned paragraphs (spine order, nav page skipped, dividers kept as section headings) |
 | `db.js` | IndexedDB storage and settings |
 | `sw.js` | Offline cache; bump `CACHE` when changing the file list |

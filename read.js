@@ -4,7 +4,7 @@
 
 import { params, intParam, escapeHtml, readUrl, chaptersUrl, nextFrom, prevFrom } from './common.js';
 import { getBook, putBook, getChapters, getSetting } from './db.js';
-import { createPlayer } from './speech.js';
+import { createSpeaker } from './speech.js';
 
 const book = await getBook(params.get('book'));
 if (!book) {
@@ -57,18 +57,21 @@ async function appendPage() {
   return true;
 }
 
+function setLink(id, href) {
+  const a = document.getElementById(id);
+  if (href) a.href = href;
+  else a.removeAttribute('href');
+  a.classList.toggle('disabled', !href);
+}
+
 function renderNav() {
   const nextTitle = book.toc[loadedTo]?.t;
-  document.getElementById('top').innerHTML = `
-    <a href="./">‹ Library</a>
-    <a href="${chaptersUrl(book.id)}">Chapters</a>
-    <span class="spacer"></span>
-    ${from > 0 ? `<a href="${readUrl(book.id, prev)}">‹ Prev</a>` : ''}
-    ${nextTitle ? `<a href="${readUrl(book.id, loadedTo)}">Next ›</a>` : ''}`;
+  setLink('chapters', chaptersUrl(book.id));
+  setLink('prevPage', from > 0 && readUrl(book.id, prev));
+  setLink('nextPage', nextTitle && readUrl(book.id, loadedTo));
   document.getElementById('end').innerHTML = nextTitle
-    ? `<a class="btn primary" href="${readUrl(book.id, loadedTo)}">Next: ${escapeHtml(nextTitle)}</a>
-       <a class="btn" href="${chaptersUrl(book.id)}">Chapters</a>`
-    : `<p class="sub">End of ${escapeHtml(book.title)}.</p><a class="btn" href="./">Library</a>`;
+    ? `<a class="btn primary" href="${readUrl(book.id, loadedTo)}">Next: ${escapeHtml(nextTitle)}</a>`
+    : `<p class="sub">End of ${escapeHtml(book.title)}.</p>`;
 }
 
 await appendPage();
@@ -81,14 +84,55 @@ async function savePosition(c, p) {
 }
 await savePosition(from, para);
 
-const player = createPlayer({
+// Keep the screen on while this page is open. The lock is released whenever
+// the page is hidden, so it is requested again on return.
+async function keepAwake() {
+  try {
+    if (document.visibilityState === 'visible') await navigator.wakeLock?.request('screen');
+  } catch {}
+}
+keepAwake();
+document.addEventListener('visibilitychange', keepAwake);
+
+// Dock: page navigation, or voice controls while reading aloud.
+const navRow = document.getElementById('navRow');
+const voiceRow = document.getElementById('voiceRow');
+const playBtn = document.getElementById('vPlay');
+
+const speaker = createSpeaker({
   article,
-  book,
   loadMore: appendPage,
   onPosition: (c, p) => {
     document.title = book.toc[c]?.t || book.title;
     savePosition(c, p);
   },
+  onChange: (playing) => {
+    playBtn.querySelector('use').setAttribute('href', playing ? '#i-pause' : '#i-play');
+    playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  },
+});
+
+function showVoice(on) {
+  navRow.hidden = on;
+  voiceRow.hidden = !on;
+}
+
+function listen(from) {
+  showVoice(true);
+  speaker.play(from);
+}
+
+if (!speaker) {
+  document.getElementById('listen').hidden = true;
+  document.getElementById('speakHere').hidden = true;
+}
+document.getElementById('listen').addEventListener('click', () => listen());
+playBtn.addEventListener('click', () => speaker.toggle());
+document.getElementById('vPrev').addEventListener('click', () => speaker.skip(-1));
+document.getElementById('vNext').addEventListener('click', () => speaker.skip(1));
+document.getElementById('vClose').addEventListener('click', () => {
+  speaker.stop();
+  showVoice(false);
 });
 
 // Tap a paragraph: read from here with the player, or restart the page there
@@ -116,7 +160,7 @@ document.getElementById('speakHere').addEventListener('click', () => {
   if (!tapped) return;
   const el = tapped;
   clearTap();
-  player.playFrom(el);
+  listen(el);
 });
 document.getElementById('startHere').addEventListener('click', () => {
   if (!tapped) return;

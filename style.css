@@ -39,7 +39,7 @@ a { color: var(--accent); }
 .wrap {
   max-width: 42rem;
   margin: 0 auto;
-  padding: 16px 16px calc(180px + env(safe-area-inset-bottom));
+  padding: 16px 16px calc(96px + env(safe-area-inset-bottom));
 }
 
 h1 { font-size: 1.6rem; line-height: 1.2; margin: 8px 0 4px; }
@@ -136,40 +136,65 @@ article p { margin: 0 0 1em; }
 article p.tapped { background: color-mix(in srgb, var(--accent) 18%, transparent); border-radius: 4px; }
 article hr { border: 0; border-top: 1px solid var(--line); margin: 2em 25%; }
 
-.end { margin: 40px 0 0; display: grid; gap: 10px; }
+.end { margin: 40px 0 24px; display: grid; gap: 10px; }
 .end .btn { min-height: 56px; font-size: 1.05rem; }
 
 article .speaking { background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 4px; }
 
-.player {
+/* Dock: one slim row of icons at the bottom of the reading page. */
+.dock {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
-  background: var(--surface);
+  padding: 2px 16px env(safe-area-inset-bottom);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border-top: 1px solid var(--line);
 }
-.player-row, .player-settings, .player-status { max-width: 42rem; margin: 0 auto; }
-.player-row { display: flex; gap: 8px; align-items: center; }
-.player-row button { min-width: 52px; font-size: 1.2rem; }
-.player-row select { margin-left: auto; }
-.player-status { color: var(--muted); font-size: 0.9rem; margin-bottom: 6px; }
-.player-settings { font-size: 0.95rem; }
-.player-settings summary { padding: 8px 0 2px; color: var(--muted); cursor: pointer; }
-.player-settings label { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
-.player-settings select { flex: 1; min-width: 0; }
-.player-settings .check { min-height: 32px; }
+.dock-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 26rem;
+  margin: 0 auto;
+}
+.dock-row[hidden] { display: none; }
 
-/* Shown in the player bar after tapping a paragraph. */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.icon:active { background: var(--line); }
+.icon.disabled { opacity: 0.3; pointer-events: none; }
+#listen, .icon.play { color: var(--accent); }
+.icon.play svg { width: 26px; height: 26px; }
+
+/* Shown above the icons after tapping a paragraph. */
 .from-here {
   display: none;
   gap: 8px;
-  max-width: 42rem;
-  margin: 0 auto 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--line);
+  max-width: 26rem;
+  margin: 6px auto 2px;
 }
 .from-here.show { display: flex; }
-.from-here button { white-space: nowrap; padding: 0 12px; }
-.from-here #speakHere { flex: 1; }
+.from-here button { flex: 1; min-height: 38px; padding: 0 10px; font-size: 0.95rem; white-space: nowrap; }
