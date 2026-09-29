@@ -1,20 +1,9 @@
 import { escapeHtml, readUrl, chaptersUrl } from './common.js';
-import { listBooks, deleteBook, getSetting, setSetting } from './db.js';
+import { listBooks, deleteBook } from './db.js';
 import { importEpub } from './import.js';
 
 const $ = (id) => document.getElementById(id);
 const status = $('status');
-
-const perPage = $('perPage');
-function showPerPage() {
-  $('perPageValue').textContent = perPage.value;
-}
-perPage.value = String(getSetting('perPage'));
-showPerPage();
-perPage.addEventListener('change', () => {
-  setSetting('perPage', Number(perPage.value));
-  showPerPage();
-});
 
 $('help').addEventListener('click', () => {
   const tips = $('tips');

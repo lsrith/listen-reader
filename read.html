@@ -25,6 +25,13 @@
       <a class="icon" id="chapters" aria-label="Chapters"><svg><use href="icons.svg#i-list"/></svg></a>
       <a class="icon" id="prevPage" aria-label="Previous page"><svg><use href="icons.svg#i-back"/></svg></a>
       <a class="icon" id="nextPage" aria-label="Next page"><svg><use href="icons.svg#i-forward"/></svg></a>
+      <label class="icon wide" aria-label="Chapters per page" title="Chapters per page">
+        <svg><use href="icons.svg#i-pages"/></svg><span id="perPageValue"></span>
+        <select id="perPage" class="overlay">
+          <option>1</option><option>2</option><option>3</option><option>5</option>
+          <option>8</option><option>10</option><option>15</option><option>20</option>
+        </select>
+      </label>
       <button class="icon" id="listen" aria-label="Read aloud"><svg><use href="icons.svg#i-listen"/></svg></button>
     </div>
     <div class="dock-row" id="voiceRow" hidden>

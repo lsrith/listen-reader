@@ -29,9 +29,9 @@ Every page has the same slim icon bar at the bottom:
 
 | Page | Icons |
 |---|---|
-| Library | **+** add EPUB · layers + number: chapters per page (default 5) · **?** tips |
+| Library | **+** add EPUB · **?** tips |
 | Chapters | library · open book: continue reading · target: scroll to the current chapter |
-| Reading | library · chapter list · previous page · next page · headphones: read aloud |
+| Reading | library · chapter list · previous page · next page · layers + number: chapters per page (default 5; changing it reopens the page at the current paragraph) · headphones: read aloud |
 
 Each library row shows the book, your current chapter (with its "Book N"
 divider when chapter numbers restart), a progress bar, and icons for the

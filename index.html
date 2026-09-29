@@ -17,7 +17,7 @@
 
     <ul class="tips" id="tips" hidden>
       <li>Add EPUBs with <b>+</b>. Books are stored on this device only.</li>
-      <li>The layers icon sets how many chapters go on one page.</li>
+      <li>On the reading page, the layers icon sets how many chapters go on one page.</li>
       <li><b>Read aloud</b> (headphones on the reading page) uses the system voice, follows the text, skips by paragraph and carries on into the next chapters. The screen stays on while a book is open.</li>
       <li><b>Safari’s Listen to Page</b> (Aa menu) keeps going with the screen locked, but stops at the end of each page.</li>
       <li>Tap a paragraph for a bubble: headphones reads aloud from there, and the page icon starts a new page there for Listen to Page.</li>
@@ -28,13 +28,6 @@
     <div class="dock-row">
       <label class="icon accent" for="file" aria-label="Add EPUB" title="Add EPUB"><svg><use href="icons.svg#i-plus"/></svg></label>
       <input id="file" type="file" multiple hidden>
-      <label class="icon wide" aria-label="Chapters per page" title="Chapters per page">
-        <svg><use href="icons.svg#i-pages"/></svg><span id="perPageValue"></span>
-        <select id="perPage" class="overlay">
-          <option>1</option><option>2</option><option>3</option><option>5</option>
-          <option>8</option><option>10</option><option>15</option><option>20</option>
-        </select>
-      </label>
       <button class="icon" id="help" aria-label="Help" aria-expanded="false" title="Help"><svg><use href="icons.svg#i-help"/></svg></button>
     </div>
   </nav>

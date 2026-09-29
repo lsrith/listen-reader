@@ -3,7 +3,7 @@
 // reads it paragraph by paragraph and loads further chapters as it goes.
 
 import { params, intParam, escapeHtml, readUrl, chaptersUrl, nextFrom, prevFrom } from './common.js';
-import { getBook, putBook, getChapters, getSetting } from './db.js';
+import { getBook, putBook, getChapters, getSetting, setSetting } from './db.js';
 import { createSpeaker } from './speech.js';
 
 const book = await getBook(params.get('book'));
@@ -83,6 +83,15 @@ async function savePosition(c, p) {
   await putBook(saved);
 }
 await savePosition(from, para);
+
+// Chapters per page: changing it reopens the page at the current paragraph.
+const perPageSelect = document.getElementById('perPage');
+perPageSelect.value = String(perPage);
+document.getElementById('perPageValue').textContent = String(perPage);
+perPageSelect.addEventListener('change', () => {
+  setSetting('perPage', Number(perPageSelect.value));
+  location.replace(readUrl(book.id, saved.lastFrom, saved.lastPara));
+});
 
 // Keep the screen on while this page is open. The lock is released whenever
 // the page is hidden, so it is requested again on return.
