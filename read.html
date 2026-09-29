@@ -8,20 +8,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="i-library" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></symbol>
-    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="3"/></symbol>
-    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
-    <symbol id="i-forward" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
-    <symbol id="i-listen" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></symbol>
-    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z" fill="currentColor"/></symbol>
-    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="currentColor"/></symbol>
-    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M19 20L9 12l10-8z" fill="currentColor"/><path d="M5 19V5"/></symbol>
-    <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 4l10 8-10 8z" fill="currentColor"/><path d="M19 5v14"/></symbol>
-    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
-    <symbol id="i-page" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
-  </svg>
-
   <main class="wrap">
     <p class="note" id="note" hidden></p>
     <article id="text"></article>
@@ -29,23 +15,23 @@
   </main>
 
   <div class="tip" id="tip" role="toolbar" hidden>
-    <button class="icon" id="speakHere" aria-label="Read aloud from here" title="Read aloud from here"><svg><use href="#i-listen"/></svg></button>
-    <button class="icon" id="startHere" aria-label="Start page here" title="Start page here"><svg><use href="#i-page"/></svg></button>
+    <button class="icon" id="speakHere" aria-label="Read aloud from here" title="Read aloud from here"><svg><use href="icons.svg#i-listen"/></svg></button>
+    <button class="icon" id="startHere" aria-label="Start page here" title="Start page here"><svg><use href="icons.svg#i-page"/></svg></button>
   </div>
 
   <nav class="dock" id="dock">
     <div class="dock-row" id="navRow">
-      <a class="icon" href="./" aria-label="Library"><svg><use href="#i-library"/></svg></a>
-      <a class="icon" id="chapters" aria-label="Chapters"><svg><use href="#i-list"/></svg></a>
-      <a class="icon" id="prevPage" aria-label="Previous page"><svg><use href="#i-back"/></svg></a>
-      <a class="icon" id="nextPage" aria-label="Next page"><svg><use href="#i-forward"/></svg></a>
-      <button class="icon" id="listen" aria-label="Read aloud"><svg><use href="#i-listen"/></svg></button>
+      <a class="icon" href="./" aria-label="Library"><svg><use href="icons.svg#i-library"/></svg></a>
+      <a class="icon" id="chapters" aria-label="Chapters"><svg><use href="icons.svg#i-list"/></svg></a>
+      <a class="icon" id="prevPage" aria-label="Previous page"><svg><use href="icons.svg#i-back"/></svg></a>
+      <a class="icon" id="nextPage" aria-label="Next page"><svg><use href="icons.svg#i-forward"/></svg></a>
+      <button class="icon" id="listen" aria-label="Read aloud"><svg><use href="icons.svg#i-listen"/></svg></button>
     </div>
     <div class="dock-row" id="voiceRow" hidden>
-      <button class="icon" id="vPrev" aria-label="Previous paragraph"><svg><use href="#i-prev"/></svg></button>
-      <button class="icon play" id="vPlay" aria-label="Pause"><svg><use href="#i-pause"/></svg></button>
-      <button class="icon" id="vNext" aria-label="Next paragraph"><svg><use href="#i-next"/></svg></button>
-      <button class="icon" id="vClose" aria-label="Stop reading aloud"><svg><use href="#i-close"/></svg></button>
+      <button class="icon" id="vPrev" aria-label="Previous paragraph"><svg><use href="icons.svg#i-prev"/></svg></button>
+      <button class="icon play" id="vPlay" aria-label="Pause"><svg><use href="icons.svg#i-pause"/></svg></button>
+      <button class="icon" id="vNext" aria-label="Next paragraph"><svg><use href="icons.svg#i-next"/></svg></button>
+      <button class="icon" id="vClose" aria-label="Stop reading aloud"><svg><use href="icons.svg#i-close"/></svg></button>
     </div>
   </nav>
   <script type="module" src="read.js"></script>

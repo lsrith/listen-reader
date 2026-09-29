@@ -9,10 +9,20 @@
 </head>
 <body>
   <main class="wrap">
-    <nav class="bar"><a href="./">‹ Library</a></nav>
-    <h1 id="title">Chapters</h1>
+    <header class="head">
+      <h1 id="title">Chapters</h1>
+      <p class="sub" id="count"></p>
+    </header>
     <ul id="toc" class="toc"></ul>
   </main>
+
+  <nav class="dock">
+    <div class="dock-row">
+      <a class="icon" href="./" aria-label="Library" title="Library"><svg><use href="icons.svg#i-library"/></svg></a>
+      <a class="icon" id="resume" aria-label="Continue reading" title="Continue reading"><svg><use href="icons.svg#i-open"/></svg></a>
+      <button class="icon" id="locate" aria-label="Show current chapter" title="Show current chapter"><svg><use href="icons.svg#i-locate"/></svg></button>
+    </div>
+  </nav>
   <script type="module" src="chapters.js"></script>
 </body>
 </html>

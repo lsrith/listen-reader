@@ -21,13 +21,22 @@ same voice Listen to Page uses.
 
 1. Copy the `.epub` files to iCloud Drive (the compiled novels are in
    `../chrome-extension/novels/<novel>/<novel>.epub`).
-2. On the iPhone, open the site in a normal Safari tab, tap **Add EPUB…** and
-   pick one or more `.epub` files.
-3. **Continue** opens a page of N chapters (**Chapters per page**, default 5).
+2. On the iPhone, open the site in a normal Safari tab, tap **+** and pick one
+   or more `.epub` files.
+3. Tap a book to open it at your saved place, as a page of N chapters.
 
-The reading page keeps the screen on (wake lock) while it's open. Its bottom bar
-has five icons: library, chapter list, previous page, next page, and read aloud
-(headphones).
+Every page has the same slim icon bar at the bottom:
+
+| Page | Icons |
+|---|---|
+| Library | **+** add EPUB · layers + number: chapters per page (default 5) · **?** tips |
+| Chapters | library · open book: continue reading · target: scroll to the current chapter |
+| Reading | library · chapter list · previous page · next page · headphones: read aloud |
+
+Each library row shows the book, your current chapter (with its "Book N"
+divider when chapter numbers restart), a progress bar, and icons for the
+chapter list and removing the book. The reading page keeps the screen on (wake
+lock) while it's open.
 
 ### Read aloud
 
@@ -72,4 +81,5 @@ Listen to Page isn't available there.
 | `speech.js` | Read aloud: Web Speech with system defaults, paragraph highlight and skip |
 | `import.js` | EPUB → cleaned paragraphs (spine order, nav page skipped, dividers kept as section headings) |
 | `db.js` | IndexedDB storage and settings |
+| `icons.svg` | Icon sprite shared by all pages (`<use href="icons.svg#i-…">`) |
 | `sw.js` | Offline cache; bump `CACHE` when changing the file list |

@@ -1,13 +1,14 @@
 // Offline support: the app files are cached on first visit, so the reader works
 // with no signal. Books themselves live in IndexedDB, not here.
 
-const CACHE = 'listen-reader-v3';
+const CACHE = 'listen-reader-v4';
 const FILES = [
   './',
   'index.html',
   'chapters.html',
   'read.html',
   'style.css',
+  'icons.svg',
   'common.js',
   'db.js',
   'import.js',

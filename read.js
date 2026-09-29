@@ -107,7 +107,7 @@ const speaker = createSpeaker({
     savePosition(c, p);
   },
   onChange: (playing) => {
-    playBtn.querySelector('use').setAttribute('href', playing ? '#i-pause' : '#i-play');
+    playBtn.querySelector('use').setAttribute('href', playing ? 'icons.svg#i-pause' : 'icons.svg#i-play');
     playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
   },
 });

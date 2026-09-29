@@ -6,8 +6,28 @@ const $ = (id) => document.getElementById(id);
 const status = $('status');
 
 const perPage = $('perPage');
+function showPerPage() {
+  $('perPageValue').textContent = perPage.value;
+}
 perPage.value = String(getSetting('perPage'));
-perPage.addEventListener('change', () => setSetting('perPage', Number(perPage.value)));
+showPerPage();
+perPage.addEventListener('change', () => {
+  setSetting('perPage', Number(perPage.value));
+  showPerPage();
+});
+
+$('help').addEventListener('click', () => {
+  const tips = $('tips');
+  tips.hidden = !tips.hidden;
+  $('help').setAttribute('aria-expanded', String(!tips.hidden));
+  if (!tips.hidden) tips.scrollIntoView({ behavior: 'smooth' });
+});
+
+function setStatus(text, isError = false) {
+  status.textContent = text;
+  status.hidden = !text;
+  status.classList.toggle('error', isError);
+}
 
 function countChapters(toc) {
   return toc.filter((c) => !c.s).length;
@@ -18,23 +38,29 @@ async function render() {
   $('books').innerHTML = books.length
     ? books
         .map((b) => {
-          const at = b.toc[b.lastFrom]?.t || b.toc[0]?.t || '';
-          return `<section class="card">
-            <h2>${escapeHtml(b.title)}</h2>
-            <p class="meta">${countChapters(b.toc)} chapters · at ${escapeHtml(at)}</p>
-            <div class="row">
-              <a class="btn primary" href="${readUrl(b.id, b.lastFrom, b.lastPara)}">Continue</a>
-              <a class="btn" href="${chaptersUrl(b.id)}">Chapters</a>
-              <button class="danger" data-delete="${escapeHtml(b.id)}">Remove</button>
-            </div>
-          </section>`;
+          // Name the chapter, not a "Book N" divider the saved place may sit on,
+          // and prefix that divider when chapter numbers restart in each book.
+          const i = b.toc.findIndex((c, n) => n >= b.lastFrom && !c.s);
+          const chapter = b.toc[i]?.t || b.toc[b.lastFrom]?.t || '';
+          const section = b.toc.slice(0, i).findLast((c) => c.s)?.t;
+          const at = section ? `${section} · ${chapter}` : chapter;
+          const pct = Math.round(((b.lastFrom + 1) / b.toc.length) * 100);
+          return `<li class="book">
+            <a class="book-main" href="${readUrl(b.id, b.lastFrom, b.lastPara)}">
+              <span class="book-title">${escapeHtml(b.title)}</span>
+              <span class="book-meta">${escapeHtml(at)} · ${countChapters(b.toc)} chapters</span>
+              <span class="progress"><span style="width:${pct}%"></span></span>
+            </a>
+            <a class="icon" href="${chaptersUrl(b.id)}" aria-label="Chapters" title="Chapters"><svg><use href="icons.svg#i-list"/></svg></a>
+            <button class="icon" data-delete="${escapeHtml(b.id)}" aria-label="Remove ${escapeHtml(b.title)}" title="Remove"><svg><use href="icons.svg#i-trash"/></svg></button>
+          </li>`;
         })
         .join('')
-    : '<p class="sub">No books yet. Add an EPUB from Files or iCloud Drive.</p>';
+    : '<li class="empty">No books yet. Tap <b>+</b> below to add an EPUB from Files or iCloud Drive.</li>';
 }
 
 $('books').addEventListener('click', async (e) => {
-  const id = e.target.dataset?.delete;
+  const id = e.target.closest('[data-delete]')?.dataset.delete;
   if (!id) return;
   if (!confirm('Remove this book from this device?')) return;
   await deleteBook(id);
@@ -44,19 +70,17 @@ $('books').addEventListener('click', async (e) => {
 $('file').addEventListener('change', async (e) => {
   const files = [...e.target.files];
   e.target.value = '';
-  status.classList.remove('error');
   // Ask Safari not to evict the library when storage runs low.
   navigator.storage?.persist?.().catch(() => {});
   for (const file of files) {
     try {
-      status.textContent = `Opening ${file.name}…`;
+      setStatus(`Opening ${file.name}…`);
       const book = await importEpub(file, (done, total) => {
-        status.textContent = `${file.name}: ${done} / ${total}`;
+        setStatus(`${file.name}: ${done} / ${total}`);
       });
-      status.textContent = `Added ${book.title} (${countChapters(book.toc)} chapters).`;
+      setStatus(`Added ${book.title} (${countChapters(book.toc)} chapters).`);
     } catch (err) {
-      status.classList.add('error');
-      status.textContent = `${file.name}: ${err.message}`;
+      setStatus(`${file.name}: ${err.message}`, true);
     }
     await render();
   }
