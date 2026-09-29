@@ -14,9 +14,24 @@
     <article id="text"></article>
     <footer class="end" id="end"></footer>
   </main>
-  <nav class="from-here" id="fromHere">
-    <button class="primary" id="startHere">Start page here</button>
-    <button id="cancelHere">Cancel</button>
+  <nav class="player" id="player">
+    <div class="from-here" id="fromHere">
+      <button class="primary" id="speakHere">▶ Read from here</button>
+      <button id="startHere">Start page here</button>
+    </div>
+    <p class="player-status" id="pStatus" hidden></p>
+    <div class="player-row">
+      <button id="pPrev" aria-label="Previous paragraph">⏮</button>
+      <button id="pPlay" class="primary" aria-label="Play">▶</button>
+      <button id="pNext" aria-label="Next paragraph">⏭</button>
+      <select id="pRate" aria-label="Speed"></select>
+    </div>
+    <details class="player-settings">
+      <summary>Voice &amp; options</summary>
+      <label>Voice <select id="pVoice"></select></label>
+      <label class="check"><input type="checkbox" id="pLock"> Lock-screen mode (experimental)</label>
+      <label class="check"><input type="checkbox" id="pAwake"> Keep screen awake while playing</label>
+    </details>
   </nav>
   <script type="module" src="read.js"></script>
 </body>

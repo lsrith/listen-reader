@@ -39,7 +39,7 @@ a { color: var(--accent); }
 .wrap {
   max-width: 42rem;
   margin: 0 auto;
-  padding: 16px 16px calc(96px + env(safe-area-inset-bottom));
+  padding: 16px 16px calc(180px + env(safe-area-inset-bottom));
 }
 
 h1 { font-size: 1.6rem; line-height: 1.2; margin: 8px 0 4px; }
@@ -139,19 +139,37 @@ article hr { border: 0; border-top: 1px solid var(--line); margin: 2em 25%; }
 .end { margin: 40px 0 0; display: grid; gap: 10px; }
 .end .btn { min-height: 56px; font-size: 1.05rem; }
 
-.from-here {
+article .speaking { background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 4px; }
+
+.player {
   position: fixed;
-  left: 50%;
-  bottom: calc(16px + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.player-row, .player-settings, .player-status { max-width: 42rem; margin: 0 auto; }
+.player-row { display: flex; gap: 8px; align-items: center; }
+.player-row button { min-width: 52px; font-size: 1.2rem; }
+.player-row select { margin-left: auto; }
+.player-status { color: var(--muted); font-size: 0.9rem; margin-bottom: 6px; }
+.player-settings { font-size: 0.95rem; }
+.player-settings summary { padding: 8px 0 2px; color: var(--muted); cursor: pointer; }
+.player-settings label { display: flex; gap: 8px; align-items: center; margin: 8px 0; }
+.player-settings select { flex: 1; min-width: 0; }
+.player-settings .check { min-height: 32px; }
+
+/* Shown in the player bar after tapping a paragraph. */
+.from-here {
   display: none;
   gap: 8px;
-  padding: 8px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  box-shadow: 0 6px 24px rgb(0 0 0 / 0.2);
-  max-width: calc(100vw - 32px);
+  max-width: 42rem;
+  margin: 0 auto 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
 }
 .from-here.show { display: flex; }
-.from-here button { white-space: nowrap; }
+.from-here button { white-space: nowrap; padding: 0 12px; }
+.from-here #speakHere { flex: 1; }
