@@ -86,7 +86,7 @@ export async function deleteBook(bookId) {
 
 // Per-viewer settings. Storage can be unavailable (private mode), so every
 // access falls back to the default.
-const DEFAULTS = { perPage: 5 };
+const DEFAULTS = { perPage: 5, rate: 1 };
 
 export function getSetting(key) {
   try {

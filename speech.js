@@ -1,9 +1,9 @@
 // Built-in reader using the browser's speech synthesis (Web Speech API) with
-// the system default voice and speed. It speaks one block at a time,
-// highlights and follows it, and asks the page for more chapters as it nears
-// the end, so reading never stops at a page end.
+// the system default voice. At rate 1 the speed is left to the system too.
+// It speaks one block at a time, highlights and follows it, and asks the page
+// for more chapters as it nears the end, so reading never stops at a page end.
 
-export function createSpeaker({ article, loadMore, onPosition, onChange }) {
+export function createSpeaker({ article, loadMore, onPosition, onChange, rate = 1 }) {
   const synth = window.speechSynthesis;
   if (!synth) return null;
 
@@ -45,6 +45,7 @@ export function createSpeaker({ article, loadMore, onPosition, onChange }) {
     const text = el.textContent.replace(/\s+/g, ' ').trim();
     if (!text) return advance(t);
     const u = new SpeechSynthesisUtterance(text);
+    if (rate !== 1) u.rate = rate;
     u.onend = () => advance(t);
     u.onerror = (e) => {
       if (t !== token) return;
@@ -108,5 +109,10 @@ export function createSpeaker({ article, loadMore, onPosition, onChange }) {
     stop,
     skip,
     toggle: () => (playing ? pause() : play()),
+    // A new speed restarts the current block so it applies straight away.
+    setRate(value) {
+      rate = value;
+      if (playing) speak(cur);
+    },
   };
 }

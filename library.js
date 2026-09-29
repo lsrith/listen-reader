@@ -59,7 +59,7 @@ $('books').addEventListener('click', async (e) => {
 $('file').addEventListener('change', async (e) => {
   const files = [...e.target.files];
   e.target.value = '';
-  // Ask Safari not to evict the library when storage runs low.
+  // Ask the browser not to evict the library when storage runs low.
   navigator.storage?.persist?.().catch(() => {});
   for (const file of files) {
     try {

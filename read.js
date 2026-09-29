@@ -1,4 +1,4 @@
-// The reading page: a run of chapters rendered as one plain article. Safari's
+// The reading page: a run of chapters rendered as one plain article. The browser's
 // Listen to Page reads it straight through; the built-in player (speech.js)
 // reads it paragraph by paragraph and loads further chapters as it goes.
 
@@ -119,6 +119,19 @@ const speaker = createSpeaker({
     playBtn.querySelector('use').setAttribute('href', playing ? 'icons.svg#i-pause' : 'icons.svg#i-play');
     playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
   },
+  rate: getSetting('rate'),
+});
+
+// Speed, shown in the voice controls.
+const rateSelect = document.getElementById('rate');
+const showRate = () => (document.getElementById('rateValue').textContent = `${rateSelect.value}×`);
+rateSelect.value = String(getSetting('rate'));
+if (!rateSelect.value) rateSelect.value = '1';
+showRate();
+rateSelect.addEventListener('change', () => {
+  setSetting('rate', Number(rateSelect.value));
+  speaker?.setRate(Number(rateSelect.value));
+  showRate();
 });
 
 function showVoice(on) {
