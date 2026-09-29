@@ -24,11 +24,14 @@ export function createSpeaker({ article, loadMore, onPosition, onChange }) {
     return list.find((el) => el.getBoundingClientRect().bottom > 60) || list[0];
   }
 
+  // Highlights the block and scrolls it to just below the top of the screen,
+  // so the text still to come fills the rest of the view.
   function mark(el) {
     article.querySelector('.speaking')?.classList.remove('speaking');
     el.classList.add('speaking');
-    const r = el.getBoundingClientRect();
-    if (r.top < 60 || r.bottom > innerHeight * 0.7) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    const offset = Math.round(innerHeight * 0.08);
+    const top = el.getBoundingClientRect().top;
+    if (Math.abs(top - offset) > 4) scrollTo({ top: scrollY + top - offset, behavior: 'smooth' });
   }
 
   function speak(el) {

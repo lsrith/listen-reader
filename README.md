@@ -37,7 +37,7 @@ has five icons: library, chapter list, previous page, next page, and read aloud
 - Tapping a paragraph shows a small bubble at the tap: headphones reads aloud
   from there, and the page icon starts a new page there (for Listen to Page).
   Tapping anywhere else dismisses it.
-- The current paragraph is highlighted and kept in view.
+- The current paragraph is highlighted and kept near the top of the screen.
 - It loads further chapters as it goes, so it doesn't stop at the page end.
 - The saved place is the paragraph being read, so **Continue** resumes there.
 - Voice and speed are the system defaults (Settings → Accessibility → Spoken
