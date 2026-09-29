@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lock Test</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .variants { display: grid; gap: 8px; margin: 16px 0; }
+    .variants button { justify-content: flex-start; text-align: left; min-height: 52px; }
+    #log { font: 13px/1.45 ui-monospace, Menlo, monospace; white-space: pre-wrap; background: var(--surface);
+           border: 1px solid var(--line); border-radius: 10px; padding: 10px; max-height: 50vh; overflow: auto; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="bar"><a href="./">‹ Library</a></nav>
+    <h1>Lock-screen test</h1>
+    <p class="sub">
+      Tap one method. Check that you hear counting, then lock the phone for about 30 seconds.
+      Try the lock-screen buttons, unlock, and read the log. Tap Stop before trying the next method.
+    </p>
+    <div class="variants">
+      <button data-v="A">A · Speech only (baseline)</button>
+      <button data-v="B">B · Silent &lt;audio&gt;, speech after it starts</button>
+      <button data-v="C">C · Web Audio tone, then speech</button>
+      <button data-v="D">D · Audio session “playback” + Web Audio, then speech</button>
+      <button data-v="E">E · Audio session “playback” + &lt;audio&gt;, then speech</button>
+      <button class="primary" id="stop">Stop</button>
+    </div>
+    <div class="row"><button id="copy">Copy log</button><button id="clear">Clear log</button></div>
+    <p></p>
+    <div id="log"></div>
+  </main>
+  <script>
+    const logEl = document.getElementById('log');
+    let lines = [];
+    try { lines = JSON.parse(localStorage.getItem('lockTestLog') || '[]'); } catch {}
+    const t0 = Date.now();
+    function log(msg) {
+      const d = new Date();
+      lines.push(`${d.toTimeString().slice(0, 8)} ${msg}`);
+      lines = lines.slice(-300);
+      try { localStorage.setItem('lockTestLog', JSON.stringify(lines)); } catch {}
+      logEl.textContent = lines.slice().reverse().join('\n');
+    }
+    logEl.textContent = lines.slice().reverse().join('\n');
+    log(`--- page loaded · audioSession API: ${'audioSession' in navigator ? navigator.audioSession.type : 'none'} · mediaSession: ${'mediaSession' in navigator}`);
+
+    document.addEventListener('visibilitychange', () => log(`visibility: ${document.visibilityState}`));
+    addEventListener('pagehide', () => log('pagehide'));
+    addEventListener('pageshow', () => log('pageshow'));
+
+    const synth = speechSynthesis;
+    let running = false, n = 0, token = 0, audioEl = null, ctx = null, src = null;
+
+    function sayNext(t) {
+      if (!running || t !== token) return;
+      n++;
+      const u = new SpeechSynthesisUtterance(`Sentence ${n}. The quick brown fox jumps over the lazy dog.`);
+      u.onstart = () => log(`speak ${n} start`);
+      u.onend = () => { log(`speak ${n} end`); setTimeout(() => sayNext(t), 0); };
+      u.onerror = (e) => log(`speak ${n} ERROR ${e.error}`);
+      synth.speak(u);
+    }
+
+    function silentWavUrl() {
+      const rate = 8000, buf = new ArrayBuffer(44 + rate), v = new DataView(buf);
+      const s = (o, x) => [...x].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+      s(0, 'RIFF'); v.setUint32(4, 36 + rate, true); s(8, 'WAVE'); s(12, 'fmt ');
+      v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+      v.setUint32(24, rate, true); v.setUint32(28, rate, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true);
+      s(36, 'data'); v.setUint32(40, rate, true);
+      new Uint8Array(buf, 44).fill(128);
+      return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+    }
+
+    function startAudioEl() {
+      audioEl = new Audio(silentWavUrl());
+      audioEl.loop = true;
+      audioEl.setAttribute('playsinline', '');
+      for (const ev of ['play', 'playing', 'pause', 'ended', 'stalled', 'suspend', 'error']) {
+        audioEl.addEventListener(ev, () => log(`audio: ${ev}`));
+      }
+      return audioEl.play().then(() => log('audio.play() resolved'), (e) => log(`audio.play() FAILED ${e.name}`));
+    }
+
+    // Near-silent tone: an all-zero buffer may be treated as not playing.
+    function startWebAudio() {
+      const c = (ctx = new (window.AudioContext || window.webkitAudioContext)());
+      c.onstatechange = () => log(`audioContext: ${c.state}`);
+      const osc = c.createOscillator(), gain = c.createGain();
+      osc.frequency.value = 440; gain.gain.value = 0.001;
+      osc.connect(gain).connect(c.destination);
+      osc.start(); src = osc;
+      return c.resume().then(() => log(`audioContext resumed: ${c.state}`));
+    }
+
+    function setSession(type) {
+      if (!('audioSession' in navigator)) return log('audioSession API not available');
+      try { navigator.audioSession.type = type; log(`audioSession.type = ${navigator.audioSession.type}`); }
+      catch (e) { log(`audioSession set FAILED ${e.message}`); }
+    }
+
+    function mediaSession(label) {
+      if (!('mediaSession' in navigator)) return;
+      navigator.mediaSession.metadata = new MediaMetadata({ title: `Lock test ${label}`, artist: 'Listen Reader' });
+      for (const a of ['play', 'pause', 'nexttrack', 'previoustrack']) {
+        try { navigator.mediaSession.setActionHandler(a, () => log(`lock-screen button: ${a}`)); } catch {}
+      }
+      navigator.mediaSession.playbackState = 'playing';
+    }
+
+    function stop() {
+      running = false; token++;
+      synth.cancel();
+      if (audioEl) { audioEl.pause(); audioEl = null; }
+      if (ctx) { try { src.stop(); } catch {} ctx.close(); ctx = null; }
+      if ('audioSession' in navigator) try { navigator.audioSession.type = 'auto'; } catch {}
+      log('stopped');
+    }
+
+    async function run(v) {
+      stop();
+      running = true; n = 0;
+      const t = ++token;
+      log(`=== method ${v}`);
+      // Speech is primed inside the tap so iOS allows it; the counting starts after the audio is up.
+      synth.speak(new SpeechSynthesisUtterance(' '));
+      if (v === 'B') await startAudioEl();
+      if (v === 'C') await startWebAudio();
+      if (v === 'D') { setSession('playback'); await startWebAudio(); }
+      if (v === 'E') { setSession('playback'); await startAudioEl(); }
+      if (v !== 'A') mediaSession(v);
+      sayNext(t);
+    }
+
+    document.querySelectorAll('[data-v]').forEach((b) => b.addEventListener('click', () => run(b.dataset.v)));
+    document.getElementById('stop').addEventListener('click', stop);
+    document.getElementById('clear').addEventListener('click', () => { lines = []; log('--- cleared'); });
+    document.getElementById('copy').addEventListener('click', () =>
+      navigator.clipboard.writeText(lines.join('\n')).then(() => log('(log copied)'), () => log('(copy failed)')));
+  </script>
+</body>
+</html>
