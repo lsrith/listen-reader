@@ -189,12 +189,31 @@ article .speaking { background: color-mix(in srgb, var(--accent) 12%, transparen
 #listen, .icon.play { color: var(--accent); }
 .icon.play svg { width: 26px; height: 26px; }
 
-/* Shown above the icons after tapping a paragraph. */
-.from-here {
-  display: none;
-  gap: 8px;
-  max-width: 26rem;
-  margin: 6px auto 2px;
+/* Bubble shown at the tapped paragraph. --arrow-x points the caret at the tap. */
+.tip {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.18);
 }
-.from-here.show { display: flex; }
-.from-here button { flex: 1; min-height: 38px; padding: 0 10px; font-size: 0.95rem; white-space: nowrap; }
+.tip[hidden] { display: none; }
+.tip .icon { color: var(--accent); }
+.tip::after {
+  content: '';
+  position: absolute;
+  left: var(--arrow-x, 50%);
+  bottom: -6px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transform: rotate(45deg);
+}
+.tip.below::after { bottom: auto; top: -6px; transform: rotate(225deg); }

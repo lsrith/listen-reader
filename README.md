@@ -34,6 +34,9 @@ has five icons: library, chapter list, previous page, next page, and read aloud
 - The headphones icon starts reading at the paragraph at the top of the screen.
   The bar switches to voice controls: previous paragraph, play/pause, next
   paragraph, and ✕ to stop and return to the page icons.
+- Tapping a paragraph shows a small bubble at the tap: headphones reads aloud
+  from there, and the page icon starts a new page there (for Listen to Page).
+  Tapping anywhere else dismisses it.
 - The current paragraph is highlighted and kept in view.
 - It loads further chapters as it goes, so it doesn't stop at the page end.
 - The saved place is the paragraph being read, so **Continue** resumes there.
@@ -46,8 +49,9 @@ has five icons: library, chapter list, previous page, next page, and read aloud
 
 1. In Safari, tap **Aa → Listen to Page**. Lock the phone.
 2. At the end of the page, tap **Next**, then start Listen to Page again.
-3. To skip forward or back, tap a paragraph → **Start page here**, then start
-   Listen to Page again. It always reads from the top of the page.
+3. To skip forward or back, tap a paragraph → page icon in the bubble ("Start
+   page here"), then start Listen to Page again. It always reads from the top
+   of the page.
 
 A page can't change Listen to Page's own controls or see its position. With the
 screen locked, pause, skip and speed are Safari's.

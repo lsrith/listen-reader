@@ -19,6 +19,7 @@
     <symbol id="i-prev" viewBox="0 0 24 24"><path d="M19 20L9 12l10-8z" fill="currentColor"/><path d="M5 19V5"/></symbol>
     <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 4l10 8-10 8z" fill="currentColor"/><path d="M19 5v14"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+    <symbol id="i-page" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
   </svg>
 
   <main class="wrap">
@@ -27,11 +28,12 @@
     <footer class="end" id="end"></footer>
   </main>
 
+  <div class="tip" id="tip" role="toolbar" hidden>
+    <button class="icon" id="speakHere" aria-label="Read aloud from here" title="Read aloud from here"><svg><use href="#i-listen"/></svg></button>
+    <button class="icon" id="startHere" aria-label="Start page here" title="Start page here"><svg><use href="#i-page"/></svg></button>
+  </div>
+
   <nav class="dock" id="dock">
-    <div class="from-here" id="fromHere">
-      <button class="primary" id="speakHere">Read from here</button>
-      <button id="startHere">Start page here</button>
-    </div>
     <div class="dock-row" id="navRow">
       <a class="icon" href="./" aria-label="Library"><svg><use href="#i-library"/></svg></a>
       <a class="icon" id="chapters" aria-label="Chapters"><svg><use href="#i-list"/></svg></a>

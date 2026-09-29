@@ -135,25 +135,39 @@ document.getElementById('vClose').addEventListener('click', () => {
   showVoice(false);
 });
 
-// Tap a paragraph: read from here with the player, or restart the page there
-// for Listen to Page (which always starts from the top). Tap it again to dismiss.
-const bar = document.getElementById('fromHere');
+// Tap a paragraph: a bubble at the tap offers reading aloud from there, or
+// restarting the page there for Listen to Page (which always starts from the
+// top). Tapping anywhere else dismisses it.
+const tip = document.getElementById('tip');
 let tapped = null;
 
 function clearTap() {
   tapped?.classList.remove('tapped');
   tapped = null;
-  bar.classList.remove('show');
+  tip.hidden = true;
 }
 
-article.addEventListener('click', (e) => {
-  if (getSelection()?.toString()) return;
-  const block = e.target.closest('[data-p], h2');
-  if (!block || block === tapped) return clearTap();
+// Places the bubble above the tap point, or below it near the top of the screen.
+function showTip(x, y) {
+  tip.hidden = false;
+  const w = tip.offsetWidth;
+  const h = tip.offsetHeight;
+  const left = Math.min(Math.max(x - w / 2, 8), document.documentElement.clientWidth - w - 8);
+  const below = y - h - 14 < 8;
+  tip.classList.toggle('below', below);
+  tip.style.left = `${left + scrollX}px`;
+  tip.style.top = `${(below ? y + 14 : y - h - 14) + scrollY}px`;
+  tip.style.setProperty('--arrow-x', `${x - left}px`);
+}
+
+document.addEventListener('click', (e) => {
+  if (tip.contains(e.target)) return;
+  const block = article.contains(e.target) && e.target.closest('[data-p], h2');
+  if (!block || block === tapped || getSelection()?.toString()) return clearTap();
   clearTap();
   tapped = block;
   tapped.classList.add('tapped');
-  bar.classList.add('show');
+  showTip(e.clientX, e.clientY);
 });
 
 document.getElementById('speakHere').addEventListener('click', () => {
