@@ -197,9 +197,8 @@ article .speaking { background: color-mix(in srgb, var(--accent) 12%, transparen
 #listen, .icon.play, .icon.accent { color: var(--accent); }
 .icon.play svg { width: 26px; height: 26px; }
 
-/* Icon with a value beside it; a transparent <select> on top takes the tap. */
+/* Icon with its current value beside it; tapping opens .menu. */
 .icon.wide {
-  position: relative;
   width: auto;
   gap: 6px;
   padding: 0 12px;
@@ -207,14 +206,34 @@ article .speaking { background: color-mix(in srgb, var(--accent) 12%, transparen
   font-size: 0.95rem;
   font-weight: 600;
 }
-.icon .overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  font-size: 16px;
-  cursor: pointer;
+.icon[aria-expanded='true'] { background: var(--line); }
+
+/* Pick-one menu, fixed just above the dock so page scrolling can't move it. */
+.menu {
+  position: fixed;
+  z-index: 10;
+  bottom: calc(54px + env(safe-area-inset-bottom));
+  display: grid;
+  min-width: 88px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.2);
+}
+.menu[hidden] { display: none; }
+.menu button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font-size: 0.95rem;
+}
+.menu button[aria-selected='true'] {
+  color: var(--accent);
+  font-weight: 700;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 /* Bubble shown at the tapped paragraph. --arrow-x points the caret at the tap. */

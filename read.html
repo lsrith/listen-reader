@@ -25,30 +25,22 @@
       <a class="icon" id="chapters" aria-label="Chapters"><svg><use href="icons.svg#i-list"/></svg></a>
       <a class="icon" id="prevPage" aria-label="Previous page"><svg><use href="icons.svg#i-back"/></svg></a>
       <a class="icon" id="nextPage" aria-label="Next page"><svg><use href="icons.svg#i-forward"/></svg></a>
-      <label class="icon wide" aria-label="Chapters per page" title="Chapters per page">
-        <svg><use href="icons.svg#i-pages"/></svg><span id="perPageValue"></span>
-        <select id="perPage" class="overlay">
-          <option>1</option><option>2</option><option>3</option><option>5</option>
-          <option>8</option><option>10</option><option>15</option><option>20</option>
-        </select>
-      </label>
+      <button class="icon wide" id="perPage" aria-label="Chapters per page" aria-haspopup="listbox" aria-expanded="false" title="Chapters per page">
+        <svg><use href="icons.svg#i-pages"/></svg><span></span>
+      </button>
       <button class="icon" id="listen" aria-label="Read aloud"><svg><use href="icons.svg#i-listen"/></svg></button>
     </div>
     <div class="dock-row" id="voiceRow" hidden>
       <button class="icon" id="vPrev" aria-label="Previous paragraph"><svg><use href="icons.svg#i-prev"/></svg></button>
       <button class="icon play" id="vPlay" aria-label="Pause"><svg><use href="icons.svg#i-pause"/></svg></button>
       <button class="icon" id="vNext" aria-label="Next paragraph"><svg><use href="icons.svg#i-next"/></svg></button>
-      <label class="icon wide" aria-label="Speed" title="Speed">
-        <svg><use href="icons.svg#i-speed"/></svg><span id="rateValue"></span>
-        <select id="rate" class="overlay">
-          <option value="0.8">0.8×</option><option value="0.9">0.9×</option><option value="1">1×</option>
-          <option value="1.1">1.1×</option><option value="1.2">1.2×</option><option value="1.35">1.35×</option>
-          <option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option>
-        </select>
-      </label>
+      <button class="icon wide" id="rate" aria-label="Speed" aria-haspopup="listbox" aria-expanded="false" title="Speed">
+        <svg><use href="icons.svg#i-speed"/></svg><span></span>
+      </button>
       <button class="icon" id="vClose" aria-label="Stop reading aloud"><svg><use href="icons.svg#i-close"/></svg></button>
     </div>
   </nav>
+  <div class="menu" id="menu" role="listbox" hidden></div>
   <script type="module" src="read.js"></script>
 </body>
 </html>

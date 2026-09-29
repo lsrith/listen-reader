@@ -84,14 +84,53 @@ async function savePosition(c, p) {
 }
 await savePosition(from, para);
 
-// Chapters per page: changing it reopens the page at the current paragraph.
-const perPageSelect = document.getElementById('perPage');
-perPageSelect.value = String(perPage);
-document.getElementById('perPageValue').textContent = String(perPage);
-perPageSelect.addEventListener('change', () => {
-  setSetting('perPage', Number(perPageSelect.value));
-  location.replace(readUrl(book.id, saved.lastFrom, saved.lastPara));
+// Pick-one menu for the dock's value buttons. It is fixed above the dock, so
+// auto-scrolling while reading aloud doesn't move it (a native <select>
+// picker on iOS follows the page).
+const menu = document.getElementById('menu');
+let menuFor = null;
+
+function closeMenu() {
+  menu.hidden = true;
+  menuFor?.setAttribute('aria-expanded', 'false');
+  menuFor = null;
+}
+
+function openMenu(button, values, current, label, onPick) {
+  if (menuFor === button) return closeMenu();
+  closeMenu();
+  menu.innerHTML = values
+    .map((v) => `<button role="option" aria-selected="${v === current}" data-v="${v}">${label(v)}</button>`)
+    .join('');
+  menu.onclick = (e) => {
+    const option = e.target.closest('[data-v]');
+    if (!option) return;
+    closeMenu();
+    onPick(Number(option.dataset.v));
+  };
+  menu.hidden = false;
+  menuFor = button;
+  button.setAttribute('aria-expanded', 'true');
+  const r = button.getBoundingClientRect();
+  const w = menu.offsetWidth;
+  menu.style.left = `${Math.min(Math.max(r.left + r.width / 2 - w / 2, 8), innerWidth - w - 8)}px`;
+}
+
+document.addEventListener('click', (e) => {
+  if (menuFor && !menu.contains(e.target) && !menuFor.contains(e.target)) closeMenu();
 });
+
+// Chapters per page: changing it reopens the page at the current paragraph.
+const PER_PAGE = [1, 2, 3, 5, 8, 10, 15, 20];
+const perPageBtn = document.getElementById('perPage');
+perPageBtn.querySelector('span').textContent = String(perPage);
+perPageBtn.addEventListener('click', () =>
+  openMenu(perPageBtn, PER_PAGE, perPage, String, (n) => {
+    if (n === perPage) return;
+    setSetting('perPage', n);
+    location.replace(readUrl(book.id, saved.lastFrom, saved.lastPara));
+  }),
+);
 
 // Keep the screen on while this page is open. The lock is released whenever
 // the page is hidden, so it is requested again on return.
@@ -108,6 +147,12 @@ const navRow = document.getElementById('navRow');
 const voiceRow = document.getElementById('voiceRow');
 const playBtn = document.getElementById('vPlay');
 
+// Speed, shown in the voice controls. A saved speed outside the offered range
+// (from an older version) snaps to the nearest option.
+const RATES = [0.65, 0.8, 0.9, 1, 1.1, 1.2, 1.35, 1.5];
+const savedRate = Number(getSetting('rate')) || 1;
+let rate = RATES.reduce((best, r) => (Math.abs(r - savedRate) < Math.abs(best - savedRate) ? r : best), 1);
+
 const speaker = createSpeaker({
   article,
   loadMore: appendPage,
@@ -119,20 +164,20 @@ const speaker = createSpeaker({
     playBtn.querySelector('use').setAttribute('href', playing ? 'icons.svg#i-pause' : 'icons.svg#i-play');
     playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
   },
-  rate: getSetting('rate'),
+  rate,
 });
 
-// Speed, shown in the voice controls.
-const rateSelect = document.getElementById('rate');
-const showRate = () => (document.getElementById('rateValue').textContent = `${rateSelect.value}×`);
-rateSelect.value = String(getSetting('rate'));
-if (!rateSelect.value) rateSelect.value = '1';
+const rateBtn = document.getElementById('rate');
+const showRate = () => (rateBtn.querySelector('span').textContent = `${rate}×`);
 showRate();
-rateSelect.addEventListener('change', () => {
-  setSetting('rate', Number(rateSelect.value));
-  speaker?.setRate(Number(rateSelect.value));
-  showRate();
-});
+rateBtn.addEventListener('click', () =>
+  openMenu(rateBtn, RATES, rate, (r) => `${r}×`, (r) => {
+    rate = r;
+    setSetting('rate', r);
+    speaker?.setRate(r);
+    showRate();
+  }),
+);
 
 function showVoice(on) {
   navRow.hidden = on;

@@ -51,7 +51,7 @@ lock) while it's open.
 - It loads further chapters as it goes, so it doesn't stop at the page end.
 - The saved place is the paragraph being read, so **Continue** resumes there.
 - The voice is the system default (Settings → Accessibility → Spoken Content).
-  The speed icon in the voice controls sets 0.8×–2×; 1× leaves the speed to
+  The speed icon in the voice controls opens a menu of 0.65×–1.5×; 1× leaves the speed to
   the system. A new speed restarts the current paragraph.
 - iOS stops web speech when the screen locks. Web speech produces no audio
   track, so a page can't keep it going in the background. Hence the wake lock.
@@ -85,3 +85,8 @@ menu, so Listen to Page isn't available there.
 | `db.js` | IndexedDB storage and settings |
 | `icons.svg` | Icon sprite shared by all pages (`<use href="icons.svg#i-…">`) |
 | `sw.js` | Offline cache; bump `CACHE` when changing the file list |
+
+## License
+
+[MIT](LICENSE). The bundled `vendor/jszip.min.js` is JSZip, dual-licensed MIT or
+GPLv3 by its authors (see the header of that file).
